@@ -24,12 +24,22 @@ class Car {
   }
 
   update() {
+    this.applyDrag();
+    this.processAccelInput();
+    this.processTurnInput();
+    this.accel = constrain(this.accel, -50, 50);
+    this.pos.add(p5.Vector.mult(this.moveVector, this.accel * 0.05));
+  }
+
+  applyDrag() {
     if (this.accel > 0) {
       this.accel -= this.drag;
     } else {
       this.accel += this.drag;
     }
+  }
 
+  processAccelInput() {
     if (keyIsDown(87)) {
       // 'W'
       this.accel += 3;
@@ -37,7 +47,9 @@ class Car {
       //'S'
       this.accel -= 2;
     }
+  }
 
+  processTurnInput() {
     if (keyIsDown(65)) {
       // 'A'
       if (this.accel > 1) {
@@ -57,8 +69,6 @@ class Car {
         this.currentAngle -= this.angleStep;
       }
     }
-    this.accel = constrain(this.accel, -50, 50);
-    this.pos.add(p5.Vector.mult(this.moveVector, this.accel * 0.05));
   }
 
   show() {
