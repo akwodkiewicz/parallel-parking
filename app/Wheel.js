@@ -39,15 +39,11 @@ class Wheel {
     );
   }
 
-  applyWheelMatrix(carHeading) {
+  show(carHeading) {
+    this.s.fill(0);
     this.s.resetMatrix();
     this.s.translate(this.pos.x, this.pos.y);
     this.s.rotate(carHeading + this.steerAngle, [0, 0, 1]);
-  }
-
-  show(carHeading) {
-    this.s.fill(0);
-    this.applyWheelMatrix(carHeading);
     this.s.rect(0, 0, this.width, this.height);
   }
 }

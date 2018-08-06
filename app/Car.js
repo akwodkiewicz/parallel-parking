@@ -16,8 +16,6 @@ class Car {
     this.wheelBase = 80;
     this.frontWheel = frontWheel;
     this.rearWheel = rearWheel;
-    this.frontWheel.setPosition(this.pos, this.wheelBase / 2, this.carHeading);
-    this.rearWheel.setPosition(this.pos, -this.wheelBase / 2, this.carHeading);
   }
 
   update() {
