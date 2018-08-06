@@ -1,15 +1,37 @@
 var car;
+var frontWheel, rearWheel;
+var geometry;
 
 function setup() {
   createCanvas(800, 800);
   angleMode(RADIANS);
-  car = new Car();
+  frontWheel = new Wheel();
+  rearWheel = new Wheel();
+  car = new Car(frontWheel, rearWheel);
+  geometry = new GeometryManager(car);
 }
 
 function draw() {
   background(51);
   car.update();
   car.show();
+  geometry.show();
+}
+
+
+class GeometryManager {
+  constructor(car) {
+    this.car = car;
+    this.front = car.frontWheel;
+    this.rear = car.rearWheel;
+  }
+
+  show() {
+    this.front.applyWheelMatrix(car.carHeading);
+    line(0, -400, 0, 400);
+    this.rear.applyWheelMatrix(car.carHeading);
+    line(0, -400, 0, 400);
+  }
 }
 
 class Wheel {
@@ -50,19 +72,23 @@ class Wheel {
     );
   }
 
+  applyWheelMatrix(carHeading) {
+    resetMatrix();
+    translate(this.pos.x, this.pos.y);
+    rotate(carHeading + this.steerAngle, [0, 0, 1]);
+  }
+
   show(carHeading) {
     rectMode(CENTER);
     fill(0);
 
-    resetMatrix();
-    translate(this.pos.x, this.pos.y);
-    rotate(carHeading + this.steerAngle, [0, 0, 1]);
+    this.applyWheelMatrix(carHeading);
     rect(0, 0, this.width, this.height);
   }
 }
 
 class Car {
-  constructor() {
+  constructor(frontWheel, rearWheel) {
     this.width = 100;
     this.height = 50;
     this.pos = createVector(width / 2, height / 2);
@@ -75,8 +101,8 @@ class Car {
     this.carHeading = 0;
 
     this.wheelBase = 80;
-    this.frontWheel = new Wheel();
-    this.rearWheel = new Wheel();
+    this.frontWheel = frontWheel;
+    this.rearWheel = rearWheel;
     this.frontWheel.setPosition(this.pos, this.wheelBase / 2, this.carHeading);
     this.rearWheel.setPosition(this.pos, -this.wheelBase / 2, this.carHeading);
   }
