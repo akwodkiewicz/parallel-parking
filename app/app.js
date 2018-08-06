@@ -18,7 +18,6 @@ function draw() {
   geometry.show();
 }
 
-
 class GeometryManager {
   constructor(car) {
     this.car = car;
@@ -27,10 +26,15 @@ class GeometryManager {
   }
 
   show() {
-    this.front.applyWheelMatrix(car.carHeading);
-    line(0, -400, 0, 400);
-    this.rear.applyWheelMatrix(car.carHeading);
-    line(0, -400, 0, 400);
+    resetMatrix();
+
+    let frontSlope = -1 / tan(this.car.carHeading + this.front.steerAngle);
+    let rearSlope = -1 / tan(this.car.carHeading + this.rear.steerAngle);
+    let frontB = this.front.pos.y - frontSlope * this.front.pos.x;
+    let rearB = this.rear.pos.y - rearSlope * this.rear.pos.x;
+
+    line(0, frontB, width, frontSlope * width + frontB);
+    line(0, rearB, width, rearSlope * width + rearB);
   }
 }
 
@@ -96,7 +100,7 @@ class Car {
     this.speed = 0;
     this.speedInc = 0.05;
     this.drag = 0.01;
-    
+
     this.angleStep = radians(1);
     this.carHeading = 0;
 
