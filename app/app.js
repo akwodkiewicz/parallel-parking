@@ -144,8 +144,11 @@ class Car {
       // 'W'
       this.speed += this.speedInc;
     } else if (keyIsDown(83)) {
-      //'S'
+      // 'S'
       this.speed -= this.speedInc;
+    } else if (keyIsDown(32)) {
+      // Spacebar
+      this.speed = 0;
     }
     this.speed = constrain(this.speed, -30, 30);
   }
