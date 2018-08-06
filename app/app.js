@@ -35,6 +35,15 @@ class GeometryManager {
 
     line(0, frontB, width, frontSlope * width + frontB);
     line(0, rearB, width, rearSlope * width + rearB);
+
+    let delta = rearSlope - frontSlope;
+    if (delta == 0) {
+      return;
+    }
+    let x = (frontB - rearB) / delta;
+    let y = (-frontSlope * rearB + rearSlope * frontB) / delta;
+
+    ellipse(x, y, 5);
   }
 }
 
