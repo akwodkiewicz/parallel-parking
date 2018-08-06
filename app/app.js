@@ -5,6 +5,7 @@ var geometry;
 function setup() {
   createCanvas(800, 800);
   angleMode(RADIANS);
+  ellipseMode(RADIUS);
   frontWheel = new Wheel();
   rearWheel = new Wheel();
   car = new Car(frontWheel, rearWheel);
@@ -42,8 +43,13 @@ class GeometryManager {
     }
     let x = (frontB - rearB) / delta;
     let y = (-frontSlope * rearB + rearSlope * frontB) / delta;
+    let frontR = dist(x, y, this.front.pos.x, this.front.pos.y);
+    let rearR = dist(x, y, this.rear.pos.x, this.rear.pos.y);
 
     ellipse(x, y, 5);
+    noFill();
+    ellipse(x, y, frontR);
+    ellipse(x, y, rearR);
   }
 }
 
