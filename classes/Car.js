@@ -11,7 +11,8 @@ class Car {
     this.drag = 0.01;
 
     this.angleStep = this.s.radians(1);
-    this.carHeading = 0;
+    this.carHeading = this.s.radians(30);
+    this.curveCenter = null;
 
     this.wheelBase = 80;
     this.frontWheel = frontWheel;
@@ -21,8 +22,11 @@ class Car {
   update() {
     this.setWheelsPosition();
     this.processTurnInput();
-    this.applyDrag();
+    //this.applyDrag();
     this.processAccelInput();
+
+    this.calculateCurveCenter();
+
     this.moveWheels();
     this.moveBody();
   }
@@ -64,9 +68,38 @@ class Car {
     this.speed = this.s.constrain(this.speed, -30, 30);
   }
 
+  calculateCurveCenter() {
+    let fPos = this.frontWheel.pos;
+    let rPos = this.rearWheel.pos;
+
+    let frontTan = this.s.tan(this.carHeading + this.frontWheel.steerAngle);
+    let rearTan = this.s.tan(this.carHeading + this.rearWheel.steerAngle);
+    frontTan = this.s.round(frontTan * 1000) / 1000;
+    rearTan = this.s.round(rearTan * 1000) / 1000;
+    if (frontTan === 0 && rearTan === 0) {
+      this.curveCenter = null;
+      return;
+    }
+
+    let frontSlope = -1 / frontTan;
+    let rearSlope = -1 / rearTan;
+    let frontB = fPos.y - frontSlope * fPos.x;
+    let rearB = rPos.y - rearSlope * rPos.x;
+  
+    let delta = rearSlope - frontSlope;
+    if (delta === 0) {
+      this.curveCenter = null;
+      return;
+    }
+
+    let x = (frontB - rearB) / delta;
+    let y = (-frontSlope * rearB + rearSlope * frontB) / delta;
+    this.curveCenter = this.s.createVector(x, y);
+  }
+
   moveWheels() {
-    this.frontWheel.move(this.speed, this.carHeading);
-    this.rearWheel.move(this.speed, this.carHeading);
+    this.frontWheel.move(this.curveCenter, this.speed, this.carHeading);
+    this.rearWheel.move(this.curveCenter, this.speed, this.carHeading);
   }
 
   moveBody() {

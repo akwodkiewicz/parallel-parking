@@ -26,17 +26,51 @@ class Wheel {
     );
   }
 
-  move(carSpeed, carHeading) {
-    this.pos = p5.Vector.add(
-      this.pos,
-      p5.Vector.mult(
-        this.s.createVector(
-          this.s.cos(carHeading + this.steerAngle),
-          this.s.sin(carHeading + this.steerAngle)
-        ),
-        carSpeed
-      )
-    );
+  move(curveCenter, carSpeed, carHeading) {
+    if (curveCenter === null) {
+      this.pos = p5.Vector.add(
+        this.pos,
+        p5.Vector.mult(
+          this.s.createVector(this.s.cos(carHeading), this.s.sin(carHeading)),
+          carSpeed
+        )
+      );
+    } else {
+      let a = this.pos;
+      let b = p5.Vector.add(
+        this.pos,
+        p5.Vector.mult(
+          this.s.createVector(this.s.cos(carHeading), this.s.sin(carHeading)),
+          1
+        )
+      );
+      let c = curveCenter;
+      let isCenterOnLeftSide =
+        (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x) < 0;
+
+      let radius = this.s.dist(
+        curveCenter.x,
+        curveCenter.y,
+        this.pos.x,
+        this.pos.y
+      );
+
+      let currentTheta = this.s.atan2(
+        this.pos.y - curveCenter.y,
+        this.pos.x - curveCenter.x
+      );
+      let deltaTheta = carSpeed / radius;
+      let newTheta;
+      if (isCenterOnLeftSide) {
+        newTheta = currentTheta - deltaTheta;
+      } else {
+        newTheta = currentTheta + deltaTheta;
+      }
+      this.pos = this.s.createVector(
+        curveCenter.x + this.s.cos(newTheta) * radius,
+        curveCenter.y + this.s.sin(newTheta) * radius
+      );
+    }
   }
 
   show(carHeading) {
