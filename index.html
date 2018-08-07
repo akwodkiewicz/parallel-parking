@@ -2,6 +2,8 @@
 
 <head>
   <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="style.css">
+
   <script src="./p5.min.js"></script>
 
   <script src="./classes/Car.js"></script>
@@ -11,8 +13,27 @@
 </head>
 
 <body>
-  <h1>Hello, World!</h1>
-  <div id="p5sketch"></div>
+  <div class="container">
+    <div class="item-a">
+      <h1>Parallel parking assistance</h1>
+    </div>
+    <div class="item-b" id="p5sketch"></div>
+    <div class="item-c">
+      <div>
+          <h2>CONTROLS</h2>
+          <p>Press W to go forward, S to go backwards.</p>
+          <p>Steer with A/D</p>
+      </div>
+      <div>
+          <h2>TODO</h2>
+          <ul>
+            <li>Fix car movement precision</li>
+            <li>Add an obstacle</li>
+            <li>Include the obstacle in parking assistance algorithm</li>
+          </ul>
+      </div>
+    </div>
+  </div>  
 </body>
 
 </html>

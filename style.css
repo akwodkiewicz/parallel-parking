@@ -1,0 +1,21 @@
+.item-a {
+  grid-area: header;
+  text-align: center;
+}
+.item-b {
+  grid-area: main;
+}
+.item-c {
+  grid-area: sidebar;
+}
+
+.container {
+    display: grid;
+
+    grid-template-columns: 500px 500px 10%;
+    grid-template-rows: auto;
+  
+  grid-template-areas:
+    "header header header header"
+    "main main . sidebar";
+}
