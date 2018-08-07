@@ -10,7 +10,7 @@ class Car {
     this.speedInc = 0.05;
     this.drag = 0.01;
 
-    this.angleStep = this.s.radians(1);
+    this.angleStep = this.s.radians(0.5);
     this.carHeading = this.s.radians(30);
     this.curveCenter = null;
 

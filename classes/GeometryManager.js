@@ -4,29 +4,79 @@ class GeometryManager {
     this.car = car;
     this.front = car.frontWheel;
     this.rear = car.rearWheel;
+
+    this.parkingYAxis = 700;
+  }
+
+  calculateAxleLines() {
+    this.frontSlope =
+      -1 / this.s.tan(this.car.carHeading + this.front.steerAngle);
+    this.rearSlope =
+      -1 / this.s.tan(this.car.carHeading + this.rear.steerAngle);
+    this.frontB = this.front.pos.y - this.frontSlope * this.front.pos.x;
+    this.rearB = this.rear.pos.y - this.rearSlope * this.rear.pos.x;
+  }
+
+  showParking() {
+    this.s.rectMode(this.s.CORNER);
+    this.s.fill(this.s.color("#cbcbf2"));
+    this.s.rect(0, this.parkingYAxis - 35, this.s.width, 3);
+    this.s.fill(this.s.color("#6d3115"));
+    this.s.rect(0, this.parkingYAxis + 35, this.s.width, 3);
+    this.s.fill(this.s.color("#874425"));
+    this.s.rect(0, this.parkingYAxis + 38, this.s.width, 100);
+    this.s.rectMode(this.s.CENTER);
+  }
+
+  showParkingGuide() {
+    // Cumbersome calculations made with a pen and a lot of paper
+
+    let m = this.rearSlope;
+    let b1 = this.rearB;
+    let yb = this.rear.pos.y;
+    let xb = this.rear.pos.x;
+    let h = this.parkingYAxis;
+
+    let temp = m * yb + xb - h * m;
+
+    let xo = temp - Math.sqrt((h - yb) * (h - yb) + (temp - xb) * (temp - xb));
+    let yo = m * xo + b1;
+
+    this.s.fill(this.s.color("#b4e5a0"));
+    this.s.ellipse(xo, yo, 8);
   }
 
   show() {
+    this.calculateAxleLines();
+
     this.s.resetMatrix();
+    this.s.line(
+      0,
+      this.frontB,
+      this.s.width,
+      this.frontSlope * this.s.width + this.frontB
+    );
+    this.s.line(
+      0,
+      this.rearB,
+      this.s.width,
+      this.rearSlope * this.s.width + this.rearB
+    );
 
-    let frontSlope =
-      -1 / this.s.tan(this.car.carHeading + this.front.steerAngle);
-    let rearSlope = -1 / this.s.tan(this.car.carHeading + this.rear.steerAngle);
-    let frontB = this.front.pos.y - frontSlope * this.front.pos.x;
-    let rearB = this.rear.pos.y - rearSlope * this.rear.pos.x;
+    this.showParking();
+    this.showParkingGuide();
 
-    this.s.line(0, frontB, this.s.width, frontSlope * this.s.width + frontB);
-    this.s.line(0, rearB, this.s.width, rearSlope * this.s.width + rearB);
-
-    let delta = rearSlope - frontSlope;
+    let delta = this.rearSlope - this.frontSlope;
     if (delta == 0) {
       return;
     }
 
-    let x = (frontB - rearB) / delta;
-    let y = (-frontSlope * rearB + rearSlope * frontB) / delta;
+    let x = (this.frontB - this.rearB) / delta;
+    let y =
+      (-this.frontSlope * this.rearB + this.rearSlope * this.frontB) / delta;
     let frontR = this.s.dist(x, y, this.front.pos.x, this.front.pos.y);
     let rearR = this.s.dist(x, y, this.rear.pos.x, this.rear.pos.y);
+    this.s.fill(0);
     this.s.ellipse(x, y, 5);
     this.s.noFill();
     this.s.ellipse(x, y, frontR);
