@@ -54,12 +54,18 @@ class Wheel {
         this.pos.x,
         this.pos.y
       );
-
+      
       let currentTheta = this.s.atan2(
         this.pos.y - curveCenter.y,
         this.pos.x - curveCenter.x
       );
-      let deltaTheta = carSpeed / radius;
+      // FIXME: In order to maintain linear velocity there has to be a fix for statement:
+      // `let deltaTheta = carSpeed / radius;`
+      // because frontWheel's and rearWheel's radiuses differ,
+      // causing curvature center displacement
+
+      // for now, carSpeed is treated as an angular velocity
+      let deltaTheta = carSpeed * 0.01;
       let newTheta;
       if (isCenterOnLeftSide) {
         newTheta = currentTheta - deltaTheta;
