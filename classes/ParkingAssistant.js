@@ -1,4 +1,4 @@
-class GeometryManager {
+class ParkingAssistant {
   constructor(sketch, car, parking) {
     this.s = sketch;
     this.car = car;
@@ -72,9 +72,11 @@ class GeometryManager {
         );
 
     this.s.rectMode(this.s.CORNER);
+    this.s.noStroke();
     this.s.fill(this.s.color("rgba(107, 244, 135, 0.6)"));
     this.s.rect(topLeft.x, topLeft.y, this.car.width, this.car.height);
     this.s.rectMode(this.s.CENTER);
+    this.s.stroke(0);
   }
 
   show() {

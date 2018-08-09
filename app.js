@@ -11,7 +11,7 @@ var myp5 = new p5(function(sketch) {
     rearWheel = new Wheel(sketch);
     motor = new Motor(sketch, frontWheel, rearWheel);
     car = new Car(sketch, frontWheel, rearWheel, motor);
-    geometry = new GeometryManager(sketch, car, parking);
+    assistant = new ParkingAssistant(sketch, car, parking);
   };
 
   sketch.draw = function() {
@@ -19,6 +19,6 @@ var myp5 = new p5(function(sketch) {
     parking.show();
     car.update();
     car.show();
-    geometry.show();
+    assistant.show();
   };
 }, "p5sketch");
