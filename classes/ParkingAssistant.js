@@ -11,6 +11,10 @@ class ParkingAssistant {
       this.s.color("rgba(141, 239, 165, 1)"),
       this.s.color("rgba(107, 228, 244, 1)")
     ];
+    this.colorsTransparent = [
+      this.s.color("rgba(141, 239, 165, 0.5)"),
+      this.s.color("rgba(107, 228, 244, 0.5)")
+    ];
   }
 
   calculateAxleLines() {
@@ -22,7 +26,7 @@ class ParkingAssistant {
     this.rearB = this.rear.pos.y - this.rearSlope * this.rear.pos.x;
   }
 
-  showParkingGuide() {
+  showParkingGuides() {
     // Cumbersome calculations made with a pen and a lot of paper
 
     let m = this.rearSlope;
@@ -84,13 +88,13 @@ class ParkingAssistant {
 
     this.s.rectMode(this.s.CORNER);
     this.s.noStroke();
-    this.s.fill(this.colors[dotNum]);
+    this.s.fill(this.colorsTransparent[dotNum]);
     this.s.rect(topLeft.x, topLeft.y, this.car.width, this.car.height);
     this.s.rectMode(this.s.CENTER);
     this.s.stroke(0);
   }
 
-  show() {
+  showAdditionalGeometry() {
     this.calculateAxleLines();
 
     this.s.resetMatrix();
@@ -107,10 +111,6 @@ class ParkingAssistant {
       this.rearSlope * this.s.width + this.rearB
     );
 
-    this.showParkingGuide();
-    this.showFinalPosition(0);
-    this.showFinalPosition(1);
-
     let delta = this.rearSlope - this.frontSlope;
     if (delta == 0) {
       return;
@@ -126,5 +126,11 @@ class ParkingAssistant {
     this.s.noFill();
     this.s.ellipse(x, y, frontR);
     this.s.ellipse(x, y, rearR);
+  }
+
+  showFullGuide() {
+    this.showParkingGuides();
+    this.showFinalPosition(0);
+    this.showFinalPosition(1);
   }
 }

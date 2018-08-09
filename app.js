@@ -17,8 +17,9 @@ var myp5 = new p5(function(sketch) {
   sketch.draw = function() {
     sketch.background(51);
     parking.show();
+    assistant.showFullGuide();
     car.update();
     car.show();
-    assistant.show();
+    assistant.showAdditionalGeometry();
   };
 }, "p5sketch");
