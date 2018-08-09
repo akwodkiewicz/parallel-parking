@@ -50,7 +50,7 @@ class Car {
   applyDrag() {
     if (this.motor.speed > 0) {
       this.motor.decelerate(this.drag);
-    } else if (this.speed < 0) {
+    } else if (this.motor.speed < 0) {
       this.motor.accelerate(this.drag);
     }
   }
