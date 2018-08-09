@@ -6,6 +6,9 @@ class ParkingAssistant {
     this.rear = car.rearWheel;
     this.parking = parking;
 
+    this.isGuideVisible = false;
+    this.isGeometryVisible = false;
+
     this.parkingGuideDots = null;
     this.colors = [
       this.s.color("rgba(141, 239, 165, 1)"),
@@ -17,17 +20,25 @@ class ParkingAssistant {
     ];
   }
 
-  calculateAxleLines() {
+  update() {
     this.frontSlope =
       -1 / this.s.tan(this.car.carHeading + this.front.steerAngle);
     this.rearSlope =
       -1 / this.s.tan(this.car.carHeading + this.rear.steerAngle);
     this.frontB = this.front.pos.y - this.frontSlope * this.front.pos.x;
     this.rearB = this.rear.pos.y - this.rearSlope * this.rear.pos.x;
+
+    this.updated = true;
   }
 
   showParkingGuides() {
     // Cumbersome calculations made with a pen and a lot of paper
+    if (!this.isGuideVisible) {
+      return;
+    }
+    if (!this.updated) {
+      this.update();
+    }
 
     let m = this.rearSlope;
     let b1 = this.rearB;
@@ -52,6 +63,12 @@ class ParkingAssistant {
   }
 
   showFinalPosition(dotNum) {
+    if (!this.isGuideVisible) {
+      return;
+    }
+    if (!this.updated) {
+      this.update();
+    }
     if (
       this.parkingGuideDots[dotNum].x < 0 ||
       this.parkingGuideDots[dotNum].x > 1000 ||
@@ -95,7 +112,12 @@ class ParkingAssistant {
   }
 
   showAdditionalGeometry() {
-    this.calculateAxleLines();
+    if (!this.isGeometryVisible) {
+      return;
+    }
+    if (!this.updated) {
+      this.update();
+    }
 
     this.s.resetMatrix();
     this.s.line(
@@ -129,6 +151,9 @@ class ParkingAssistant {
   }
 
   showFullGuide() {
+    if (!this.updated) {
+      this.update();
+    }
     this.showParkingGuides();
     this.showFinalPosition(0);
     this.showFinalPosition(1);
