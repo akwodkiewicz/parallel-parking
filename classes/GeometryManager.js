@@ -1,11 +1,10 @@
 class GeometryManager {
-  constructor(sketch, car) {
+  constructor(sketch, car, parking) {
     this.s = sketch;
     this.car = car;
     this.front = car.frontWheel;
     this.rear = car.rearWheel;
-
-    this.parkingYAxis = 700;
+    this.parking = parking;
   }
 
   calculateAxleLines() {
@@ -17,16 +16,7 @@ class GeometryManager {
     this.rearB = this.rear.pos.y - this.rearSlope * this.rear.pos.x;
   }
 
-  showParking() {
-    this.s.rectMode(this.s.CORNER);
-    this.s.fill(this.s.color("#cbcbf2"));
-    this.s.rect(0, this.parkingYAxis - 35, this.s.width, 3);
-    this.s.fill(this.s.color("#6d3115"));
-    this.s.rect(0, this.parkingYAxis + 35, this.s.width, 3);
-    this.s.fill(this.s.color("#874425"));
-    this.s.rect(0, this.parkingYAxis + 38, this.s.width, 100);
-    this.s.rectMode(this.s.CENTER);
-  }
+
 
   showParkingGuide() {
     // Cumbersome calculations made with a pen and a lot of paper
@@ -35,7 +25,7 @@ class GeometryManager {
     let b1 = this.rearB;
     let yb = this.rear.pos.y;
     let xb = this.rear.pos.x;
-    let h = this.parkingYAxis;
+    let h = this.parking.parkingYAxis;
 
     let temp = m * yb + xb - h * m;
 
@@ -63,7 +53,6 @@ class GeometryManager {
       this.rearSlope * this.s.width + this.rearB
     );
 
-    this.showParking();
     this.showParkingGuide();
 
     let delta = this.rearSlope - this.frontSlope;

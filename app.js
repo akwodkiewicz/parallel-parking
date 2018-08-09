@@ -6,15 +6,17 @@ var myp5 = new p5(function(sketch) {
     sketch.angleMode(sketch.RADIANS);
     sketch.ellipseMode(sketch.RADIUS);
     sketch.rectMode(sketch.CENTER);
+    parking = new ParkingLot(sketch);
     frontWheel = new Wheel(sketch);
     rearWheel = new Wheel(sketch);
     motor = new Motor(sketch, frontWheel, rearWheel);
     car = new Car(sketch, frontWheel, rearWheel, motor);
-    geometry = new GeometryManager(sketch, car);
+    geometry = new GeometryManager(sketch, car, parking);
   };
 
   sketch.draw = function() {
     sketch.background(51);
+    parking.show();
     car.update();
     car.show();
     geometry.show();
