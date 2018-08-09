@@ -6,7 +6,11 @@ class ParkingAssistant {
     this.rear = car.rearWheel;
     this.parking = parking;
 
-    this.parkingGuideDot = null;
+    this.parkingGuideDots = null;
+    this.colors = [
+      this.s.color("rgba(141, 239, 165, 1)"),
+      this.s.color("rgba(107, 228, 244, 1)")
+    ];
   }
 
   calculateAxleLines() {
@@ -28,20 +32,27 @@ class ParkingAssistant {
     let h = this.parking.parkingYAxis;
 
     let temp = m * yb + xb - h * m;
-
-    let xo = temp - Math.sqrt((h - yb) * (h - yb) + (temp - xb) * (temp - xb));
-    let yo = m * xo + b1;
-    this.parkingGuideDot = this.s.createVector(xo, yo);
-    this.s.fill(this.s.color("rgba(107, 244, 135, 1)"));
-    this.s.ellipse(xo, yo, 8);
+    let temp2 = Math.sqrt((h - yb) * (h - yb) + (temp - xb) * (temp - xb));
+    let xE = temp - temp2;
+    let yE = m * xE + b1;
+    let xF = temp + temp2;
+    let yF = m * xF + b1;
+    this.parkingGuideDots = [
+      this.s.createVector(xE, yE),
+      this.s.createVector(xF, yF)
+    ];
+    this.s.fill(this.colors[0]);
+    this.s.ellipse(xE, yE, 8);
+    this.s.fill(this.colors[1]);
+    this.s.ellipse(xF, yF, 8);
   }
 
-  showFinalPosition() {
+  showFinalPosition(dotNum) {
     if (
-      this.parkingGuideDot.x < 0 ||
-      this.parkingGuideDot.x > 1000 ||
-      this.parkingGuideDot.y < 0 ||
-      this.parkingGuideDot.y > 800
+      this.parkingGuideDots[dotNum].x < 0 ||
+      this.parkingGuideDots[dotNum].x > 1000 ||
+      this.parkingGuideDots[dotNum].y < 0 ||
+      this.parkingGuideDots[dotNum].y > 800
     ) {
       return;
     }
@@ -56,7 +67,7 @@ class ParkingAssistant {
         1
       )
     );
-    let c = this.parkingGuideDot;
+    let c = this.parkingGuideDots[dotNum];
     let isCenterOnLeftSide =
       (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x) < 0;
 
@@ -73,7 +84,7 @@ class ParkingAssistant {
 
     this.s.rectMode(this.s.CORNER);
     this.s.noStroke();
-    this.s.fill(this.s.color("rgba(107, 244, 135, 0.6)"));
+    this.s.fill(this.colors[dotNum]);
     this.s.rect(topLeft.x, topLeft.y, this.car.width, this.car.height);
     this.s.rectMode(this.s.CENTER);
     this.s.stroke(0);
@@ -97,7 +108,8 @@ class ParkingAssistant {
     );
 
     this.showParkingGuide();
-    this.showFinalPosition();
+    this.showFinalPosition(0);
+    this.showFinalPosition(1);
 
     let delta = this.rearSlope - this.frontSlope;
     if (delta == 0) {
