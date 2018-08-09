@@ -4,13 +4,13 @@ class Car {
 
     this.width = 100;
     this.height = 50;
-    this.pos = this.s.createVector(this.s.width / 2, this.s.height / 2);
+    this.pos = this.s.createVector(680, 480);
 
     this.acceleration = 0.05;
     this.drag = 0.01;
 
     this.angleStep = this.s.radians(0.8);
-    this.carHeading = this.s.radians(30);
+    this.carHeading = -1.82
     this.curveCenter = null;
 
     this.wheelBase = 80;
