@@ -5,6 +5,8 @@ class GeometryManager {
     this.front = car.frontWheel;
     this.rear = car.rearWheel;
     this.parking = parking;
+
+    this.parkingGuideDot = null;
   }
 
   calculateAxleLines() {
@@ -15,8 +17,6 @@ class GeometryManager {
     this.frontB = this.front.pos.y - this.frontSlope * this.front.pos.x;
     this.rearB = this.rear.pos.y - this.rearSlope * this.rear.pos.x;
   }
-
-
 
   showParkingGuide() {
     // Cumbersome calculations made with a pen and a lot of paper
@@ -31,9 +31,50 @@ class GeometryManager {
 
     let xo = temp - Math.sqrt((h - yb) * (h - yb) + (temp - xb) * (temp - xb));
     let yo = m * xo + b1;
-
-    this.s.fill(this.s.color("#b4e5a0"));
+    this.parkingGuideDot = this.s.createVector(xo, yo);
+    this.s.fill(this.s.color("rgba(107, 244, 135, 1)"));
     this.s.ellipse(xo, yo, 8);
+  }
+
+  showFinalPosition() {
+    if (
+      this.parkingGuideDot.x < 0 ||
+      this.parkingGuideDot.x > 1000 ||
+      this.parkingGuideDot.y < 0 ||
+      this.parkingGuideDot.y > 800
+    ) {
+      return;
+    }
+    let a = this.rear.pos;
+    let b = p5.Vector.add(
+      this.rear.pos,
+      p5.Vector.mult(
+        this.s.createVector(
+          this.s.cos(this.car.carHeading),
+          this.s.sin(this.car.carHeading)
+        ),
+        1
+      )
+    );
+    let c = this.parkingGuideDot;
+    let isCenterOnLeftSide =
+      (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x) < 0;
+
+    // isCenterOnLeftSide === true => car will be facing right
+    let topLeft = isCenterOnLeftSide
+      ? this.s.createVector(
+          c.x - this.rear.width / 2,
+          this.parking.parkingYAxis - this.car.height / 2
+        )
+      : this.s.createVector(
+          c.x - (this.car.width - this.rear.width / 2),
+          this.parking.parkingYAxis - this.car.height / 2
+        );
+
+    this.s.rectMode(this.s.CORNER);
+    this.s.fill(this.s.color("rgba(107, 244, 135, 0.6)"));
+    this.s.rect(topLeft.x, topLeft.y, this.car.width, this.car.height);
+    this.s.rectMode(this.s.CENTER);
   }
 
   show() {
@@ -54,6 +95,7 @@ class GeometryManager {
     );
 
     this.showParkingGuide();
+    this.showFinalPosition();
 
     let delta = this.rearSlope - this.frontSlope;
     if (delta == 0) {
