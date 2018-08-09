@@ -1,28 +1,29 @@
 class Car {
-  constructor(sketch, frontWheel, rearWheel) {
+  constructor(sketch, frontWheel, rearWheel, motor) {
     this.s = sketch;
 
     this.width = 100;
     this.height = 50;
     this.pos = this.s.createVector(this.s.width / 2, this.s.height / 2);
 
-    this.speed = 0;
-    this.speedInc = 0.05;
+    this.acceleration = 0.05;
     this.drag = 0.01;
 
-    this.angleStep = this.s.radians(0.5);
+    this.angleStep = this.s.radians(0.8);
     this.carHeading = this.s.radians(30);
     this.curveCenter = null;
 
     this.wheelBase = 80;
     this.frontWheel = frontWheel;
     this.rearWheel = rearWheel;
+
+    this.motor = motor;
   }
 
   update() {
     this.setWheelsPosition();
     this.processTurnInput();
-    //this.applyDrag();
+    this.applyDrag();
     this.processAccelInput();
 
     this.calculateCurveCenter();
@@ -41,31 +42,30 @@ class Car {
       // 'A' == left
       this.frontWheel.turn(-this.angleStep);
     } else if (this.s.keyIsDown(68)) {
-      // 'D' ==
+      // 'D' == right
       this.frontWheel.turn(this.angleStep);
     }
   }
 
   applyDrag() {
-    if (this.speed > 0) {
-      this.speed -= this.drag;
+    if (this.motor.speed > 0) {
+      this.motor.decelerate(this.drag);
     } else if (this.speed < 0) {
-      this.speed += this.drag;
+      this.motor.accelerate(this.drag);
     }
   }
 
   processAccelInput() {
     if (this.s.keyIsDown(87)) {
       // 'W'
-      this.speed += this.speedInc;
+      this.motor.accelerate(this.acceleration);
     } else if (this.s.keyIsDown(83)) {
       // 'S'
-      this.speed -= this.speedInc;
+      this.motor.decelerate(this.acceleration);
     } else if (this.s.keyIsDown(32)) {
       // Spacebar
-      this.speed = 0;
+      this.motor.handbrake();
     }
-    this.speed = this.s.constrain(this.speed, -30, 30);
   }
 
   calculateCurveCenter() {
@@ -85,7 +85,7 @@ class Car {
     let rearSlope = -1 / rearTan;
     let frontB = fPos.y - frontSlope * fPos.x;
     let rearB = rPos.y - rearSlope * rPos.x;
-  
+
     let delta = rearSlope - frontSlope;
     if (delta === 0) {
       this.curveCenter = null;
@@ -98,8 +98,7 @@ class Car {
   }
 
   moveWheels() {
-    this.frontWheel.move(this.curveCenter, this.speed, this.carHeading);
-    this.rearWheel.move(this.curveCenter, this.speed, this.carHeading);
+    this.motor.moveWheels(this.curveCenter, this.carHeading);
   }
 
   moveBody() {

@@ -8,7 +8,8 @@ var myp5 = new p5(function(sketch) {
     sketch.rectMode(sketch.CENTER);
     frontWheel = new Wheel(sketch);
     rearWheel = new Wheel(sketch);
-    car = new Car(sketch, frontWheel, rearWheel);
+    motor = new Motor(sketch, frontWheel, rearWheel);
+    car = new Car(sketch, frontWheel, rearWheel, motor);
     geometry = new GeometryManager(sketch, car);
   };
 

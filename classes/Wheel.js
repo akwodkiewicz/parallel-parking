@@ -26,57 +26,27 @@ class Wheel {
     );
   }
 
-  move(curveCenter, carSpeed, carHeading) {
-    if (curveCenter === null) {
-      this.pos = p5.Vector.add(
-        this.pos,
-        p5.Vector.mult(
-          this.s.createVector(this.s.cos(carHeading), this.s.sin(carHeading)),
-          carSpeed
-        )
-      );
-    } else {
-      let a = this.pos;
-      let b = p5.Vector.add(
-        this.pos,
-        p5.Vector.mult(
-          this.s.createVector(this.s.cos(carHeading), this.s.sin(carHeading)),
-          1
-        )
-      );
-      let c = curveCenter;
-      let isCenterOnLeftSide =
-        (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x) < 0;
+  moveStraight(carSpeed, carHeading) {
+    let t1 = p5.Vector.mult(
+      this.s.createVector(this.s.cos(carHeading), this.s.sin(carHeading)),
+      carSpeed
+    );
+    let t2 = p5.Vector.add(this.pos, t1);
+    this.pos = t2;
+  }
 
-      let radius = this.s.dist(
-        curveCenter.x,
-        curveCenter.y,
-        this.pos.x,
-        this.pos.y
-      );
-      
-      let currentTheta = this.s.atan2(
-        this.pos.y - curveCenter.y,
-        this.pos.x - curveCenter.x
-      );
-      // FIXME: In order to maintain linear velocity there has to be a fix for statement:
-      // `let deltaTheta = carSpeed / radius;`
-      // because frontWheel's and rearWheel's radiuses differ,
-      // causing curvature center displacement
+  moveCurved(curveCenter, newTheta) {
+    let radius = this.s.dist(
+      curveCenter.x,
+      curveCenter.y,
+      this.pos.x,
+      this.pos.y
+    );
 
-      // for now, carSpeed is treated as an angular velocity
-      let deltaTheta = carSpeed * 0.01;
-      let newTheta;
-      if (isCenterOnLeftSide) {
-        newTheta = currentTheta - deltaTheta;
-      } else {
-        newTheta = currentTheta + deltaTheta;
-      }
-      this.pos = this.s.createVector(
-        curveCenter.x + this.s.cos(newTheta) * radius,
-        curveCenter.y + this.s.sin(newTheta) * radius
-      );
-    }
+    this.pos = this.s.createVector(
+      curveCenter.x + this.s.cos(newTheta) * radius,
+      curveCenter.y + this.s.sin(newTheta) * radius
+    );
   }
 
   show(carHeading) {
