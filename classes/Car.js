@@ -10,7 +10,7 @@ class Car {
     this.drag = 0.01;
 
     this.angleStep = this.s.radians(0.8);
-    this.carHeading = -1.82
+    this.carHeading = -1.82;
     this.curveCenter = null;
 
     this.wheelBase = 80;

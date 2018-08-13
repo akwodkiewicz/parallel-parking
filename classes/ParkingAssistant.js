@@ -6,8 +6,8 @@ class ParkingAssistant {
     this.rear = car.rearWheel;
     this.parking = parking;
 
-    this.isGuideVisible = false;
-    this.isGeometryVisible = false;
+    this.isGuideVisible = true;
+    this.isGeometryVisible = true;
 
     this.parkingGuideDots = null;
     this.colors = [

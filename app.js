@@ -16,6 +16,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
       gui.add(assistant, "isGeometryVisible");
       gui.add(assistant, "isGuideVisible");
+      gui
+        .add(
+          parking,
+          "parkingSpaceLength",
+          parking.obstacleWidth * 1.25,
+          parking.obstacleWidth * 2
+        )
+        .onChange(() => parking.createObstacles());
     };
 
     sketch.draw = function() {
