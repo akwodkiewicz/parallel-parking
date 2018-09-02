@@ -56,6 +56,8 @@ class ParkingAssistant {
       this.s.createVector(xE, yE),
       this.s.createVector(xF, yF)
     ];
+
+    this.s.resetMatrix();
     this.s.fill(this.colors[0]);
     this.s.ellipse(xE, yE, 8);
     this.s.fill(this.colors[1]);
@@ -103,6 +105,7 @@ class ParkingAssistant {
           this.parking.parkingYAxis - this.car.height / 2
         );
 
+    this.s.resetMatrix();
     this.s.rectMode(this.s.CORNER);
     this.s.noStroke();
     this.s.fill(this.colorsTransparent[dotNum]);
