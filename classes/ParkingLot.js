@@ -6,6 +6,8 @@ class ParkingLot {
     this.xMax = 1000;
     this.parkingYAxis = 700;
 
+    this.gapIndex = 3;
+
     this.obstacleWidth = 100;
     this.obstacleHeight = 50;
     this.parkingSpaceLength = 130;
@@ -20,7 +22,7 @@ class ParkingLot {
       i < this.xMax;
       i = i + this.parkingSpaceLength, j++
     ) {
-      if (j !== 3) {
+      if (j !== this.gapIndex) {
         this.obstacles.push(
           new Obstacle(
             this.s,
@@ -31,6 +33,12 @@ class ParkingLot {
         );
       }
     }
+  }
+
+  parkingGap() {
+    let start = this.obstacles[this.gapIndex - 1].frontBumper();
+    let end = this.obstacles[this.gapIndex].rearBumper();
+    return [start, end];
   }
 
   show() {
@@ -56,6 +64,14 @@ class Obstacle {
     this.height = height;
     this.pos = center;
     this.color = this.s.color("#e1ddee");
+  }
+
+  frontBumper() {
+    return p5.Vector.add(this.pos, this.s.createVector(this.width / 2, 0));
+  }
+
+  rearBumper() {
+    return p5.Vector.sub(this.pos, this.s.createVector(this.width / 2, 0));
   }
 
   show() {

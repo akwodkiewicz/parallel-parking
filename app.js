@@ -29,10 +29,11 @@ document.addEventListener("DOMContentLoaded", function() {
     sketch.draw = function() {
       sketch.background(51);
       parking.show();
-      assistant.showFullGuide();
+      assistant.showBestPosition();
       car.update();
       car.show();
       assistant.showAdditionalGeometry();
+      assistant.showFullGuide();
 
       assistant.updated = false;
     };

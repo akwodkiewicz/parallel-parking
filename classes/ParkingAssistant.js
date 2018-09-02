@@ -150,6 +150,71 @@ class ParkingAssistant {
     this.s.ellipse(x, y, rearR);
   }
 
+  showBestPosition() {
+    let [start, end] = this.parking.parkingGap();
+    let bestCenter = this.s.createVector(start.x + this.car.width / 2, start.y);
+    this.s.fill(this.s.color("grey"));
+    this.s.rect(bestCenter.x, bestCenter.y, this.car.width, this.car.height);
+  }
+
+  showCornerCollision() {
+    if (!this.car.curveCenter) {
+      return;
+    }
+
+    let t = p5.Vector.add(
+      this.car.pos,
+      this.s.createVector(
+        this.car.width / 2,
+        this.car.height / 2
+      )
+    );
+    let frontRightCar = this.rotate(this.car.pos.x, this.car.pos.y, t.x, t.y, this.car.carHeading);
+
+
+    let [_, end] = this.parking.parkingGap();
+    let rearLeftObstacle = p5.Vector.add(
+      end,
+      this.s.createVector(0, -this.parking.obstacleHeight / 2)
+    );
+
+    let frontRightCarDist = this.s.dist(
+      this.car.curveCenter.x,
+      this.car.curveCenter.y,
+      frontRightCar.x,
+      frontRightCar.y
+    );
+    let rearLeftObstacleDist = this.s.dist(
+      this.car.curveCenter.x,
+      this.car.curveCenter.y,
+      rearLeftObstacle.x,
+      rearLeftObstacle.y
+    );
+
+    this.s.fill('orange');
+    this.s.ellipse(frontRightCar.x, frontRightCar.y, 3);
+    this.s.ellipse(rearLeftObstacle.x, rearLeftObstacle.y, 3);
+    
+    this.s.noFill();
+    if(frontRightCarDist > rearLeftObstacleDist) {
+      this.s.stroke('red');
+      this.s.ellipse(this.car.curveCenter.x, this.car.curveCenter.y, frontRightCarDist);
+      this.s.stroke('black');
+    } else {
+      this.s.ellipse(this.car.curveCenter.x, this.car.curveCenter.y, frontRightCarDist);
+    }  
+    return frontRightCarDist > rearLeftObstacleDist;
+  }
+
+  rotate(cx, cy, x, y, radians) {
+    let cos = Math.cos(-radians),
+        sin = Math.sin(-radians),
+        nx = (cos * (x - cx)) + (sin * (y - cy)) + cx,
+        ny = (cos * (y - cy)) - (sin * (x - cx)) + cy;
+    return this.s.createVector(nx, ny);
+  }
+
+
   showFullGuide() {
     if (!this.updated) {
       this.update();
@@ -157,5 +222,6 @@ class ParkingAssistant {
     this.showParkingGuides();
     this.showFinalPosition(0);
     this.showFinalPosition(1);
+    this.showCornerCollision();
   }
 }

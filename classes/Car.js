@@ -10,7 +10,7 @@ class Car {
     this.drag = 0.01;
 
     this.angleStep = this.s.radians(0.8);
-    this.carHeading = -1.82;
+    this.carHeading = 0;//-1.82;
     this.curveCenter = null;
 
     this.wheelBase = 80;
@@ -76,7 +76,7 @@ class Car {
     let rearTan = this.s.tan(this.carHeading + this.rearWheel.steerAngle);
     frontTan = this.s.round(frontTan * 1000) / 1000;
     rearTan = this.s.round(rearTan * 1000) / 1000;
-    if (frontTan === 0 && rearTan === 0) {
+    if (frontTan === rearTan) {
       this.curveCenter = null;
       return;
     }
