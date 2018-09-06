@@ -24,6 +24,9 @@ document.addEventListener("DOMContentLoaded", function() {
           parking.obstacleWidth * 2
         )
         .onChange(() => parking.createObstacles());
+      gui
+        .add(parking, "obstacleHeight", 35, 65)
+        .onChange(() => parking.createObstacles());
     };
 
     sketch.draw = function() {
