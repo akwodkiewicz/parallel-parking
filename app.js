@@ -14,8 +14,22 @@ document.addEventListener("DOMContentLoaded", function() {
       car = new Car(sketch, frontWheel, rearWheel, motor);
       assistant = new ParkingAssistant(sketch, car, parking);
 
-      gui.add(assistant, "isGeometryVisible");
-      gui.add(assistant, "isGuideVisible");
+      gui
+        .add(assistant, "isGeometryVisible")
+        .listen()
+        .onChange(newValue => {
+          if (!newValue) {
+            assistant.isGuideVisible = false;
+          }
+        });
+      gui
+        .add(assistant, "isGuideVisible")
+        .listen()
+        .onChange(newValue => {
+          if (newValue) {
+            assistant.isGeometryVisible = true;
+          }
+        });
       gui
         .add(
           parking,

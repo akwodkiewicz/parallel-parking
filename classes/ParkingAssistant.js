@@ -179,7 +179,7 @@ class ParkingAssistant {
       );
       collisionPredicate = (cornerD, obstacleD) => cornerD < obstacleD;
     }
-   
+
     let carCorner = this.rotate(
       this.car.pos.x,
       this.car.pos.y,
@@ -239,6 +239,9 @@ class ParkingAssistant {
   }
 
   showFullGuide() {
+    if (!this.isGuideVisible) {
+      return;
+    }
     if (!this.updated) {
       this.update();
     }
