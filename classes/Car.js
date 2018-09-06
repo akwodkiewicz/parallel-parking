@@ -113,11 +113,17 @@ class Car {
   }
 
   show() {
-    this.s.fill(255);
     this.s.resetMatrix();
     this.s.translate(this.pos.x, this.pos.y);
     this.s.rotate(this.carHeading, [0, 0, 1]);
+    
+    this.s.fill('yellow');
+    this.s.rect(this.width/2 , -this.height/2 + 8, 6, 14);
+    this.s.rect(this.width/2 , this.height/2 - 8, 6, 14);
+    
+    this.s.fill(255);
     this.s.rect(0, 0, this.width, this.height);
+    
     this.frontWheel.show(this.carHeading);
     this.rearWheel.show(this.carHeading);
   }
