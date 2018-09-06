@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function() {
     sketch.draw = function() {
       sketch.background(51);
       parking.show();
-      assistant.showBestPosition();
+      // assistant.showBestPosition();
       car.update();
       car.show();
       assistant.showAdditionalGeometry();
