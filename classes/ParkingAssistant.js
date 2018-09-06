@@ -164,16 +164,29 @@ class ParkingAssistant {
     if (!this.car.curveCenter) {
       return;
     }
-
-    let t = p5.Vector.add(
-      this.car.pos,
-      this.s.createVector(
-        this.car.width / 2,
-        this.car.height / 2
-      )
+    let carCornerRelative;
+    let collisionPredicate;
+    if (this.front.steerAngle < 0) {
+      carCornerRelative = p5.Vector.add(
+        this.car.pos,
+        this.s.createVector(this.car.width / 2, this.car.height / 2)
+      );
+      collisionPredicate = (cornerD, obstacleD) => cornerD > obstacleD;
+    } else {
+      carCornerRelative = p5.Vector.add(
+        this.car.pos,
+        this.s.createVector(-this.car.width / 2, this.car.height / 2)
+      );
+      collisionPredicate = (cornerD, obstacleD) => cornerD < obstacleD;
+    }
+   
+    let carCorner = this.rotate(
+      this.car.pos.x,
+      this.car.pos.y,
+      carCornerRelative.x,
+      carCornerRelative.y,
+      this.car.carHeading
     );
-    let frontRightCar = this.rotate(this.car.pos.x, this.car.pos.y, t.x, t.y, this.car.carHeading);
-
 
     let [_, end] = this.parking.parkingGap();
     let rearLeftObstacle = p5.Vector.add(
@@ -181,11 +194,11 @@ class ParkingAssistant {
       this.s.createVector(0, -this.parking.obstacleHeight / 2)
     );
 
-    let frontRightCarDist = this.s.dist(
+    let carCornerDist = this.s.dist(
       this.car.curveCenter.x,
       this.car.curveCenter.y,
-      frontRightCar.x,
-      frontRightCar.y
+      carCorner.x,
+      carCorner.y
     );
     let rearLeftObstacleDist = this.s.dist(
       this.car.curveCenter.x,
@@ -194,29 +207,36 @@ class ParkingAssistant {
       rearLeftObstacle.y
     );
 
-    this.s.fill('orange');
-    this.s.ellipse(frontRightCar.x, frontRightCar.y, 3);
+    this.s.fill("orange");
+    this.s.ellipse(carCorner.x, carCorner.y, 3);
     this.s.ellipse(rearLeftObstacle.x, rearLeftObstacle.y, 3);
-    
+
     this.s.noFill();
-    if(frontRightCarDist > rearLeftObstacleDist) {
-      this.s.stroke('red');
-      this.s.ellipse(this.car.curveCenter.x, this.car.curveCenter.y, frontRightCarDist);
-      this.s.stroke('black');
+    if (collisionPredicate(carCornerDist, rearLeftObstacleDist)) {
+      this.s.stroke("red");
+      this.s.ellipse(
+        this.car.curveCenter.x,
+        this.car.curveCenter.y,
+        carCornerDist
+      );
+      this.s.stroke("black");
     } else {
-      this.s.ellipse(this.car.curveCenter.x, this.car.curveCenter.y, frontRightCarDist);
-    }  
-    return frontRightCarDist > rearLeftObstacleDist;
+      this.s.ellipse(
+        this.car.curveCenter.x,
+        this.car.curveCenter.y,
+        carCornerDist
+      );
+    }
+    return carCornerDist > rearLeftObstacleDist;
   }
 
   rotate(cx, cy, x, y, radians) {
     let cos = Math.cos(-radians),
-        sin = Math.sin(-radians),
-        nx = (cos * (x - cx)) + (sin * (y - cy)) + cx,
-        ny = (cos * (y - cy)) - (sin * (x - cx)) + cy;
+      sin = Math.sin(-radians),
+      nx = cos * (x - cx) + sin * (y - cy) + cx,
+      ny = cos * (y - cy) - sin * (x - cx) + cy;
     return this.s.createVector(nx, ny);
   }
-
 
   showFullGuide() {
     if (!this.updated) {
